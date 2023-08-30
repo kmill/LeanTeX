@@ -1,4 +1,4 @@
-import LeanTeX.Builtins
+import LeanTeX
 import Std.Tactic.GuardMsgs
 
 set_option linter.unusedVariables false
@@ -9,14 +9,14 @@ def a : Nat := 22
 
 def real.pi : Nat := 3
 
-open real Latex in
+open real LeanTeX in
 latex_pp_const_rule pi := LatexData.atomString "\\pi" |>.maybeWithTooltip "real.pi"
 
 def f : Nat → Nat → Nat := λ x y => x + y
 
 def g : Unit → Nat := λ _ => 22
 
-open Latex in
+open LeanTeX in
 /-- An experiment: use a subscript for an argument. Represents `Fin n` as `\mathbb{N}_{<n}` -/
 -- TODO make work for multi-argument like Nat → Nat → Real → Real
 latex_pp_app_rules (kind := any) (paramKinds := params)
@@ -42,7 +42,7 @@ def foo (n : Nat) : Prop := true
 /-- info: \operatorname{Lean}\left[\text{?foo}\right] -/
 #guard_msgs in #latex ?foo
 section
-open scoped Latex.Extra
+open scoped LeanTeX.Extra
 /-- info: ?foo -/
 #guard_msgs in #latex ?foo
 end

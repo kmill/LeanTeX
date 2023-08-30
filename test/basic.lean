@@ -1,4 +1,4 @@
-import LeanTeX.Builtins
+import LeanTeX
 import Std.Tactic.GuardMsgs
 
 set_option linter.unusedVariables false

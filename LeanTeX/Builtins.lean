@@ -1,6 +1,6 @@
 import Lean.Data
-import LeanTeX.Basic
 import LeanTeX.LatexChar
+import LeanTeX.RuleSyntax
 import LeanTeX.MkAppN
 
 /-! # Builtin LaTeX pretty printers

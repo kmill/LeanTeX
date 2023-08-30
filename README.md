@@ -1,2 +1,3 @@
 # LeanTeX
-Lean 4 library for pretty printing expressions as LaTeX
+
+This is a Lean 4 library for pretty printing expressions as LaTeX.
