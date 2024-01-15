@@ -42,7 +42,7 @@ latex_pp_rules (kind := mdata)
 
 /-- `LatexPrinter` for free variables. -/
 latex_pp_rules (kind := fvar)
-  | Expr.fvar fvarId => return LatexData.atomString (← fvarId.toLatex) 
+  | Expr.fvar fvarId => return LatexData.atomString (← fvarId.toLatex)
 
 namespace Extra
 /-- `LatexPrinter` for metavariables. These print using the `userName` prefixed with "?".
@@ -196,7 +196,7 @@ latex_pp_app_rules (const := Exists)
 /-- Factory function for printers for binary operations. Only checks properties of the
 arguments list -- it is up to users of this to make sure the correct function is being applied.
 
-- `numArgs` is the number of arguments for the binary operation. 
+- `numArgs` is the number of arguments for the binary operation.
 - `lhsIdx` is the index into the arguments list for the LHS.
 - `rhsIdx` is the index into the arguments list for the RHS. -/
 def basicBinOpPrinter (op : String) (bp : Nat) (assoc : Associativity) (numArgs : Nat)
@@ -335,17 +335,25 @@ latex_pp_app_rules (const := HPow.hPow)
 there is a specific application printer for functions applied to `()`. -/
 latex_pp_const_rule Unit.unit := return LatexData.atomString "()"
 
+/-- Process an expression that is a rightward-nested `Prod.mk` or `Sigma.mk` -/
+def latexProdMk (e : Expr) : LatexPrinterM LatexData := do
+  let args := recogProd #[] e
+  let pp ← args.mapM latexPP
+  return (LatexData.intercalate ", " pp).parens
+where
+  recogProd (currArgs : Array Expr) (e : Expr) : Array Expr :=
+    match e with
+    | mkAppN (.const ``Prod.mk _) #[_, _, a, b] =>
+      recogProd (currArgs.push a) b
+    | mkAppN (.const ``Sigma.mk _) #[_, _, a, b] =>
+      recogProd (currArgs.push a) b
+    | _ => currArgs.push e
+
 /-- Represent elements of a product as tuples, using Lean-style right-associativity rules. -/
-latex_pp_app_rules (const := Prod.mk)
-  | _, #[_, _, a, b] => do
-    let args := recogProd #[a] b
-    let pp ← args.mapM latexPP
-    return (LatexData.intercalate ", " pp).parens
-where recogProd (currArgs : Array Expr) (e : Expr) : Array Expr :=
-  match e with
-  | mkAppN (.const `Prod.mk _) #[_, _, a, b] =>
-    recogProd (currArgs.push a) b
-  | _ => currArgs.push e
+latex_pp_rules (kind := app.Prod.mk) | e => latexProdMk e
+
+/-- Represent elements of a product as tuples, using Lean-style right-associativity rules. -/
+latex_pp_rules (kind := app.Sigma.mk) | e => latexProdMk e
 
 /-- `LatexPrinter` for products of types. -/
 def_latex_binop Prod " \\times " 35 .right

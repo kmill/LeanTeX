@@ -35,6 +35,8 @@ variable (b : Nat) (c : Nat → Real → Real) (x : Real)
 #guard_msgs in #latex Nat × Nat × Nat × Fin 37
 /-- info: \mathbb{N} \times (n : \mathbb{N}) \times \mathbb{N}_{< n} \times \mathbb{N} -/
 #guard_msgs in #latex Nat × (n : Nat) × Fin n × Nat
+/-- info: (1, 1, 1) -/
+#guard_msgs in #latex (⟨1, 1, 1⟩ : (n : Nat) × Fin n × Nat)
 /-- info: () -/
 #guard_msgs in #latex ()
 /-- info: \text{g}() -/
