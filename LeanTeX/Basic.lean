@@ -1,7 +1,7 @@
 import Lean.Data
 import Lean.KeyedDeclsAttribute
 import Lean.PrettyPrinter
-import Std.Lean.Parser
+import Lean.Parser
 import Lean.Elab.Command
 import Lean.Elab.AuxDef
 import LeanTeX.Defs
@@ -21,7 +21,7 @@ The specific pretty printers are in the `LeanTeX.Builtins` module. We use the at
 system to record the pretty printers, and one can't apply an attribute in the same module in
 which it was defined.
 
-There are two kinds of pretty printers that can be registered: the generic one uses the attribute 
+There are two kinds of pretty printers that can be registered: the generic one uses the attribute
 `latex_pp` and there is a specialized one `latex_pp_app` for function applications. Those attributes
 are keyed by "kind" which is a `Lean.Name`. When pretty-printing an `Expr`, those kinds are compared to
 one computed from the expression by `LeanTeX.getExprKind`. The hierarchical nature of names is used here
@@ -29,7 +29,7 @@ to first try the most specific pretty-printer, matching the full kind, and then,
 try to remove the last name part and iterate, see `LeanTeX.latexPPFor`.
 
 The fact that function applications use pretty-printers registered using the attribute `latex_pp_app`
-cannot be seen in this file, this happens in the function application builtin pretty-printer 
+cannot be seen in this file, this happens in the function application builtin pretty-printer
 from the `Builtins` file.
 
 One complexity in the design is that human-written mathematics is a 2D notation. A simple
@@ -161,7 +161,7 @@ where
     | .num base _ => base
     | name => name
 
-/-- Given an `Expr` that is a `.forallE` or `.lam`, execute the given `d` in the context of a 
+/-- Given an `Expr` that is a `.forallE` or `.lam`, execute the given `d` in the context of a
 local declaration. The function `d` is provided the name of the new local and its type.  -/
 def withBindingBodyUnusedName (e : Expr) (d : Name → Expr → LatexPrinterM α) : LatexPrinterM α := do
   let n ← getUnusedName e.bindingName! e.bindingBody!

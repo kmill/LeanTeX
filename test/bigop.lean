@@ -1,5 +1,5 @@
 import LeanTeX
-import Std.Tactic.GuardMsgs
+import Lean.Elab.Tactic.Guard
 --import Mathlib.Algebra.BigOperators.Basic
 
 set_option linter.unusedVariables false

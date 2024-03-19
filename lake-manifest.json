@@ -1,11 +1,14 @@
-{"version": 5,
- "packagesDir": "lake-packages",
+{"version": 7,
+ "packagesDir": ".lake/packages",
  "packages":
- [{"git":
-   {"url": "https://github.com/leanprover/std4",
-    "subDir?": null,
-    "rev": "2b8aaf35445a336eafb3d73631df184e7c7b7691",
-    "opts": {},
-    "name": "std",
-    "inputRev?": "main",
-    "inherited": false}}]}
+ [{"url": "https://github.com/leanprover/std4",
+   "type": "git",
+   "subDir": null,
+   "rev": "1fa3d92b9aff636c2b64e55c2baf06e3783530ae",
+   "name": "std",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "main",
+   "inherited": false,
+   "configFile": "lakefile.lean"}],
+ "name": "LeanTeX",
+ "lakeDir": ".lake"}
