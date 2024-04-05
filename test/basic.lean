@@ -1,5 +1,5 @@
 import LeanTeX
-import Std.Tactic.GuardMsgs
+import Lean.Elab.Tactic.Guard
 
 set_option linter.unusedVariables false
 
