@@ -76,7 +76,7 @@ syntax (name := latex_pp_app_rules_syntax) (docComment)? (Parser.Term.attributes
 def processKindOrConst (c : TSyntax ``kindOrConstClause) : CommandElabM (Name × Ident) := do
   match c with
   | `(kindOrConstClause| (const := $id)) =>
-    let name ← resolveGlobalConstNoOverloadWithInfo id
+    let name ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo id
     let kind := `const ++ name
     return (kind, mkIdentFrom id kind)
   | `(kindOrConstClause| (kind := $id)) =>
@@ -117,7 +117,7 @@ where
   adaptExpander fun
   | `(command| $[$doc?:docComment]? $[@[$attrs?,*]]? $attrKind?:attrKind
                 latex_pp_const_rule $name:ident := $body:term $[$whereClause?:whereDecls]?) => do
-    let c ← resolveGlobalConstNoOverloadWithInfo name
+    let c ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo name
     let kind := mkIdentFrom name (`const ++ c)
     let ppAttr ← `(Lean.Parser.Term.attrInstance|$attrKind? latex_pp $kind)
     let attrs := attrs?.map (·.getElems) |>.getD #[] |>.push ppAttr
