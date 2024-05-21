@@ -225,7 +225,7 @@ open Meta Lean.Elab Lean.Elab.Command in
   adaptExpander fun
   | `(command| $[$doc?:docComment]? $[@[$attrs?,*]]? $attrKind?:attrKind
                 def_latex_binop $name:ident $latex:term $prec:term $assoc:term) => do
-    let c ← resolveGlobalConstNoOverloadWithInfo name
+    let c ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo name
     let t ← Lean.mkConstWithLevelParams c
     let arity ← liftTermElabM <| withTransparency TransparencyMode.default do
                   forallTelescopeReducing (← inferType t) fun args _ => pure args.size
