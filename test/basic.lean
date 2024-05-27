@@ -127,3 +127,6 @@ variable (X : Type) (U : Set X) (x : X)
 
 /-- info: x \in U -/
 #guard_msgs in #latex x ∈ U
+
+/-- info: \text{Prod.mk}(1) -/
+#guard_msgs in #latex Prod.mk 1

@@ -338,6 +338,9 @@ latex_pp_const_rule Unit.unit := return LatexData.atomString "()"
 /-- Process an expression that is a rightward-nested `Prod.mk` or `Sigma.mk` -/
 def latexProdMk (e : Expr) : LatexPrinterM LatexData := do
   let args := recogProd #[] e
+  -- If partially applied, then using product notation is incorrect (and it leads to an infinite loop!)
+  if args.size < 2 then
+    failure
   let pp ← args.mapM latexPP
   return (LatexData.intercalate ", " pp).parens
 where
