@@ -5,3 +5,4 @@ import LeanTeX.LatexChar
 import LeanTeX.LatexCmd
 import LeanTeX.MkAppN
 import LeanTeX.RuleSyntax
+import LeanTeX.Widget
