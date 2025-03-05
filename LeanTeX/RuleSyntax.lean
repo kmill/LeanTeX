@@ -108,7 +108,7 @@ where
   -- TODO: would be nice if we could use `no_error_if_unused%`
   maybeAddFailureRule (alts : TSyntaxArray ``Parser.Term.matchAlt) :
       CommandElabM (TSyntaxArray ``Parser.Term.matchAlt) := do
-    match alts.back with
+    match alts.back?.getD default with
     | `(Parser.Term.matchAltExpr| | _ => $_)
     | `(Parser.Term.matchAltExpr| | $_:ident => $_) => return alts
     | _ => return alts.push <| ← `(Parser.Term.matchAltExpr| | _ => failure)
@@ -150,7 +150,7 @@ where
   maybeAddFailureRule (alts : TSyntaxArray ``Parser.Term.matchAlt) :
       CommandElabM (TSyntaxArray ``Parser.Term.matchAlt) := do
     let fail ← `(Parser.Term.matchAltExpr| | _, _ => failure)
-    match alts.back with
+    match alts.back?.getD default with
     | `(Parser.Term.matchAltExpr| | $x, $y => $_) =>
       if isCatchAllPatt x && isCatchAllPatt y then
         return alts

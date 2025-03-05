@@ -121,12 +121,15 @@ variable (f1 f2 : Nat → Nat)
 #guard_msgs in #latex ((1 = 1) = (2 = 2))
 
 def Set (α : Type u) := α → Prop
-instance : Membership α (Set α) := ⟨fun x s => s x⟩
+instance : Membership α (Set α) := ⟨fun s x => s x⟩
 
 variable (X : Type) (U : Set X) (x : X)
 
 /-- info: x \in U -/
 #guard_msgs in #latex x ∈ U
+
+/-- info: x \notin U -/
+#guard_msgs in #latex x ∉ U
 
 /-- info: \text{Prod.mk}(1) -/
 #guard_msgs in #latex Prod.mk 1

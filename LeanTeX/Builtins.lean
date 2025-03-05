@@ -246,7 +246,7 @@ latex_pp_app_rules (const := Not)
   | _, #[mkAppN (.const ``Membership.mem _) #[_, _, _, x, y]] => do
     let a ← latexPP x
     let b ← latexPP y
-    return a.protectRight 50 ++ LatexData.nonAssocOp " \\notin " 50 ++ b.protectLeft 50
+    return b.protectRight 50 ++ LatexData.nonAssocOp " \\notin " 50 ++ a.protectLeft 50
   | _, #[p] => do
     let p ← latexPP p
     return LatexData.rightAssocOp "\\mathop{\\neg} " 40 ++ p.protectLeft 40
@@ -289,7 +289,7 @@ latex_pp_app_rules (const := Membership.mem)
   | _, #[_, _, _, a, b] => do
     let a ← latexPP a
     let b ← latexPP b
-    return a.protectRight 50 ++ LatexData.nonAssocOp " \\in " 50 ++ b.protectLeft 50
+    return b.protectRight 50 ++ LatexData.nonAssocOp " \\in " 50 ++ a.protectLeft 50
 
 -- Note: `HasSubset.Subset` is not in scope here
 latex_pp_app_rules (kind := const.HasSubset.Subset)
