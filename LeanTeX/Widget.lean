@@ -29,15 +29,34 @@ Tactic for displaying the goal in LaTeX form.
 -/
 elab tk:"texify" : tactic => withMainContext do
   let mut lines : Array String := #[]
+  -- State for variable merging.
+  -- Example, to write `x, y : ℝ` rather than `x : ℝ` and `y : ℝ` independently
+  let mut currCDecl? : Option (Array String × String) := none
+  let flush (lines : Array String) (currCDecl? : Option (Array String × String)) :
+      Array String × Option (Array String × String) :=
+    if let some (vars, type) := currCDecl? then
+      (lines.push s!"{String.intercalate ", " vars.toList} : {type}", none)
+    else
+      (lines, none)
+  let pushCDecl (lines : Array String) (currCDecl? : Option (Array String × String))
+      (var : String) (type : String) :
+      Array String × Option (Array String × String) := Id.run do
+    if let some (vars, type') := currCDecl? then
+      if type == type' then
+        return (lines, (vars.push var, type'))
+    let (lines, _) := flush lines currCDecl?
+    return (lines, some (#[var], type))
   for decl in (← getLCtx) do
     unless decl.isImplementationDetail do
       let var ← run_latexPP decl.toExpr {}
       let type ← run_latexPP (← instantiateMVars decl.type) {}
       if let some value := decl.value? then
+        (lines, currCDecl?) := flush lines currCDecl?
         let val ← run_latexPP (← instantiateMVars value) {}
         lines := lines.push s!"{var} : {type} := {val}"
       else
-        lines := lines.push s!"{var} : {type}"
+        (lines, currCDecl?) := pushCDecl lines currCDecl? var type
+  (lines, _) := flush lines currCDecl?
   let goal ← run_latexPP (← instantiateMVars (← getMainTarget)).consumeMData {}
   lines := lines.push s!"\\vdash {goal}"
   let md := String.intercalate "\n\n" (lines

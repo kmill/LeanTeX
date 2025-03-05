@@ -96,3 +96,8 @@ end
 example (x y : Nat) (h : x < y) : 2 * x < 2 * y := by
   texify
   sorry
+
+-- note that types from different universes merge since pretty printing doesn't show difference
+example {α β : Type _} (f : α → β) : ∀ y, ∃ x, f x = y := by
+  texify
+  sorry
