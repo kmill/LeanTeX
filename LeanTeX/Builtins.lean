@@ -291,24 +291,6 @@ latex_pp_app_rules (const := Membership.mem)
     let b ← latexPP b
     return b.protectRight 50 ++ LatexData.nonAssocOp " \\in " 50 ++ a.protectLeft 50
 
--- Note: `HasSubset.Subset` is not in scope here
-latex_pp_app_rules (kind := const.HasSubset.Subset)
-  | _, #[_, _, a, b] => do
-    let a ← latexPP a
-    let b ← latexPP b
-    return a.protectRight 50 ++ LatexData.nonAssocOp " \\subseteq " 50 ++ b.protectLeft 50
-
-@[latex_pp_app const.Union.union] def pp_Union := basicBinOpPrinter " \\cup " 65 .left 4
-@[latex_pp_app const.Inter.inter] def pp_Inter := basicBinOpPrinter " \\cap " 70 .left 4
-
-/-- This renders `Set.image f X` as `f[X]`, which is a reasonably common notation for set image. -/
-latex_pp_app_rules (kind := const.Set.image)
-  | _, #[_, _, f, X] => do
-    let f ← latexPP f
-    let X ← latexPP X
-    return ← f.protectRight funAppBP ++ X.brackets |>.mergeBP (lbp := .NonAssoc funAppBP) (rbp := .NonAssoc funAppBP)
-      |>.maybeWithTooltip s!"image of \\({X.latex.1}\\) under \\({f.latex.1}\\)"
-
 /-- Default division: use division slash -/
 def_latex_binop HDiv.hDiv " / " 70 .left
 
@@ -383,31 +365,15 @@ latex_pp_const_rule Nat := (LatexData.atomString "\\mathbb{N}").maybeWithTooltip
 
 latex_pp_const_rule Nat.zero := (LatexData.atomString "0").maybeWithTooltip "Nat.zero"
 
+latex_pp_const_rule Int := (LatexData.atomString "\\mathbb{Z}").maybeWithTooltip "Int"
+
 /-- An experiment: use a subscript for an argument. Represents `Fin n` as `\mathbb{N}_{<n}` -/
 latex_pp_app_rules (const := Fin)
   | _, #[n] => do
     let n ← withExtraSmallness 2 <| latexPP n
     return (← LatexData.atomString "\\mathbb{N}" |>.maybeWithTooltip "Fin").sub ("< " ++ n)
 
-latex_pp_app_rules (kind := const.Finset.prod)
-| _, #[_α, _β, _inst, s, f] => do
-  let set ← withExtraSmallness 2 <| latexPP s
-  withBindingBodyUnusedName' f `i fun name body => do
-    let pbody ← latexPP body
-    let pbody := pbody.protectLeft 66
-    let psum := (← (LatexData.atomString "\\prod" |>.bigger 1).sub (s!"{name.toLatex} \\in " ++ set) |>.maybeWithTooltip "Finset.prod") ++ pbody
-    return psum |>.resetBP (lbp := .Infinity) |>.mergeBP (rbp := .NonAssoc 65)
-
-latex_pp_app_rules (kind := const.Finset.sum)
-  | _, #[_α, _β, _inst, s, f] => do
-    let set ← withExtraSmallness 2 <| latexPP s
-    withBindingBodyUnusedName' f `i fun name body => do
-      let pbody ← latexPP body
-      let pbody := pbody.protectLeft 66
-      let psum := (← (LatexData.atomString "\\sum" |>.bigger 1).sub (s!"{name.toLatex} \\in " ++ set) |>.maybeWithTooltip "Finset.sum") ++ pbody
-      return psum |>.resetBP (lbp := .Infinity) |>.mergeBP (rbp := .NonAssoc 65)
-
-latex_pp_app_rules (kind := const.EmptyCollection.emptyCollection)
+latex_pp_app_rules (const := EmptyCollection.emptyCollection)
 | _, #[_α, _inst] => pure <| LatexData.atomString "\\varnothing"
 
 end LeanTeX
